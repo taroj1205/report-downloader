@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Westlake School Reports Downloader</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.7/tailwind.min.css">
+    <script src="/jszip.min.js"></script>
+</head>
+
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <h1 class="text-2xl font-bold mb-4">Westlake School Reports Downloader</h1>
+        <button id="download-all" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:bg-gray-400 disabled:text-gray-600 disabled:cursor-not-allowed">
+            Download All Reports
+        </button>
+        <p id="message" class="hidden">Please go to <a class="text-blue-500" href="https://portal.westlake.school.nz/reports"
+            target="_blank">https://portal.westlake.school.nz/reports</a></p>
+    </div>
+    <script src="popup.js"></script>
+</body>
+
+</html>
