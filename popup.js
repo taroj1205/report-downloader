@@ -11,28 +11,27 @@ chrome.tabs.query({ active: true, currentWindow: true }, async function (tabs) {
         console.log(url)
         return
     }
-    document.addEventListener('DOMContentLoaded', function () {
-        // Listen for clicks on the download all button
-        document.getElementById('download-all').addEventListener('click', function () {
-            downloadAllButton.textContent = 'Downloading...'; // Change the button text to "Downloading..."
-            downloadAllButton.disabled = true
+    // Listen for clicks on the download all button
+    document.getElementById('download-all').addEventListener('click', function () {
+        console.log('Clicked')
+        downloadAllButton.textContent = 'Downloading...'; // Change the button text to "Downloading..."
+        downloadAllButton.disabled = true
 
-            // Execute the content script to get the download data
-            chrome.scripting.executeScript({
-                target: { tabId: activeTab.id },
-                function: getDownloadData
-            }, function (result) {
-                if (chrome.runtime.lastError) {
-                    console.error(chrome.runtime.lastError.message);
-                    downloadAllButton.textContent = 'Error Occured';
-                    downloadAllButton.disabled = false
-                    return;
-                }
+        // Execute the content script to get the download data
+        chrome.scripting.executeScript({
+            target: { tabId: activeTab.id },
+            function: getDownloadData
+        }, function (result) {
+            if (chrome.runtime.lastError) {
+                console.error(chrome.runtime.lastError.message);
+                downloadAllButton.textContent = 'Error Occured';
+                downloadAllButton.disabled = false
+                return;
+            }
 
-                downloadAllButton.textContent = 'Downloaded Successfully!';
+            downloadAllButton.textContent = 'Downloaded Successfully!';
 
-                console.log(result)
-            });
+            console.log(result)
         });
     });
 });
