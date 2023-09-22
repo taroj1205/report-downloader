@@ -29,7 +29,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, async function (tabs) {
                 return;
             }
 
-            downloadAllButton.textContent = 'Downloaded Successfully!';
+            downloadAllButton.textContent = 'Successful!';
 
             console.log(result)
         });
@@ -38,38 +38,40 @@ chrome.tabs.query({ active: true, currentWindow: true }, async function (tabs) {
 
 function getDownloadData() {
     return new Promise((resolve, reject) => {
-        const downloadButtons = document.querySelectorAll('.btn-success');
-        const downloadData = [];
+        try {
+            const downloadButtons = document.querySelectorAll('.btn-success');
 
-        const promises = [];
+            downloadButtons.forEach(function (button) {
+                const link = button.href;
+                const name = button.parentNode.parentNode.querySelector('td:nth-child(2)').textContent;
+                const filename = name + '.pdf'; // Concatenate name with '.pdf'
 
-        downloadButtons.forEach(function (button) {
-            const link = button.href;
-            const name = button.parentNode.parentNode.children[1].textContent;
-            const filename = name + '.pdf';
+                fetch(link)
+                    .then(response => response.blob())
+                    .then(blob => {
+                        const blobUrl = URL.createObjectURL(blob);
 
-            const promise = fetch(link)
-                .then(response => response.blob())
-                .then(blob => {
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = filename;
-                    a.click();
-                })
-                .catch(error => {
-                    console.error(error);
-                });
+                        const a = document.createElement('a');
+                        a.href = blobUrl;
+                        a.target = '_blank';
+                        a.download = filename;
+                        a.click();
 
-            promises.push(promise);
-        });
+                        // Clean up the Blob URL after the download
+                        URL.revokeObjectURL(blobUrl);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            });
 
-        // Wait for all the fetch requests to complete
-        Promise.all(promises).then(function () {
-            resolve(downloadData);
-        });
+            resolve(); // Resolve the promise when all downloads are initiated
+        } catch (error) {
+            reject(error);
+        }
     });
 }
+
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     if (message.data) {
